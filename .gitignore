@@ -1,2 +1,6 @@
 .venv
 .env
+*.js
+*.json
+
+node_modules
