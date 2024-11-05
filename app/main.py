@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from app.config import db
+from app.config.dbconfig import db
 
 
 def init_app():
