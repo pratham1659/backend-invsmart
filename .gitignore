@@ -1,5 +1,5 @@
-.venv
-.env
+*.venv
+*.env
 *.js
 *.json
 
