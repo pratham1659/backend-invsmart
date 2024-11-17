@@ -28,6 +28,12 @@ poetry env info
 uvicorn app.main:app --reload
 ```
 
+Also run it like by making some modification in toml files and main file
+
+```bash
+poetry run start
+```
+
 ### Step 6: create a `.env` file for sensitive variables
 
 in FastAPI
@@ -61,4 +67,12 @@ By default, Poetry creates virtual environments outside your project directory. 
 ```bash
 poetry config virtualenvs.in-project true
 poetry install
+```
+
+## step 9: Important keys that we have used in this projects
+
+The command produces 32 random bytes in hexadecimal format, which results in a string with 64 characters (since each byte is represented by two hex characters).
+
+```bash
+openssl rand -hex 32
 ```
