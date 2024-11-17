@@ -1,14 +1,14 @@
 # FastAPI + PostgreSQL
 
-Installation Steps for My Project
+Installation Steps for FastAPI Invsmart project.
 
-## Step 1: Clone the Repository
+### Step 1: Clone the Repository
 
 ```bash
 git https://github.com/pratham1659/backend-invsmart.git
 ```
 
-## Step 2: Steps to Create and Use a Poetry Virtual Environment
+### Step 2: Steps to Create and Use a Poetry Virtual Environment
 
 ```bash
 poetry init
@@ -16,19 +16,19 @@ poetry install
 poetry shell
 ```
 
-## Step 4: Check the Virtual Environment Path
+### Step 4: Check the Virtual Environment Path
 
 ```bash
 poetry env info
 ```
 
-## Step 5: Run the application
+### Step 5: Run the application
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-## Step 6: create a `.env` file for sensitive variables
+### Step 6: create a `.env` file for sensitive variables
 
 in FastAPI
 
@@ -46,7 +46,7 @@ API_KEY = os.getenv("API_KEY")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ```
 
-## Step 7: Deactivate the Virtual Environment
+### Step 7: Deactivate the Virtual Environment
 
 When you're done working in the Poetry shell, deactivate it with:
 
