@@ -1,6 +1,6 @@
 # FastAPI + PostgreSQL
 
-# Installation Steps for My Project
+Installation Steps for My Project
 
 ## Step 1: Clone the Repository
 
@@ -8,7 +8,7 @@
 git https://github.com/pratham1659/backend-invsmart.git
 ```
 
-# Step 2: Steps to Create and Use a Poetry Virtual Environment
+## Step 2: Steps to Create and Use a Poetry Virtual Environment
 
 ```bash
 poetry init
@@ -16,20 +16,19 @@ poetry install
 poetry shell
 ```
 
-# Step 4: Check the Virtual Environment Path
+## Step 4: Check the Virtual Environment Path
 
 ```bash
 poetry env info
 ```
 
-# Step 5: Run the application
+## Step 5: Run the application
 
-````bash
-uvicorn main:app --reload
 ```bash
-````
+uvicorn app.main:app --reload
+```
 
-# Step 6: create a `.env` file for sensitive variables
+## Step 6: create a `.env` file for sensitive variables
 
 in FastAPI
 
@@ -47,7 +46,7 @@ API_KEY = os.getenv("API_KEY")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ```
 
-# Step 7: Deactivate the Virtual Environment
+## Step 7: Deactivate the Virtual Environment
 
 When you're done working in the Poetry shell, deactivate it with:
 
@@ -55,7 +54,7 @@ When you're done working in the Poetry shell, deactivate it with:
 exit
 ```
 
-# step 8: Configure Poetry to Always Create Virtual Environments in the Project Folder
+## step 8: Configure Poetry to Always Create Virtual Environments in the Project Folder
 
 By default, Poetry creates virtual environments outside your project directory. To store the virtual environment in the project folder:
 
