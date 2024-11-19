@@ -1,15 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
 from app.config.dbconfig import db
-from fastapi.params import Body
-from pydantic import BaseModel
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
+from app.model.posts import Post
+from random import randrange
 
 
 load_dotenv()
@@ -56,10 +51,22 @@ async def test(item_id: str):
     return {"Hello ": item_id}
 
 
-@app.post("/selectfilter")
-async def selectfilter(payLoad: dict = Body(...)):
-    print(payLoad)
-    return {"message": f"title {payLoad['title']} content: {payLoad['content']}"}
+my_posts = [{"id": 1, "title": "title of post 1", "content": "content of post 1"},
+            {"id": 2, "title": "favorite foods", "content": "I like pizza"}]
+
+
+@app.get("/getposts")
+async def get_posts():
+    return {"message": my_posts}
+
+
+@app.post("/posts")
+async def create_posts(payLoad: Post):
+    post_dict = payLoad.dict()
+    post_dict['id'] = randrange(0, 1000000)
+    my_posts.append(post_dict)
+    print(payLoad.model_dump_json)
+    return {"data": post_dict}
 
 
 def start():

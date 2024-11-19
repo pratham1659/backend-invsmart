@@ -1,6 +1,7 @@
 # import uvicorn
 # from fastapi import FastAPI
 # from app.config.dbconfig import db
+# from fastapi.params import Body
 # from pydantic import BaseModel
 # from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -9,6 +10,7 @@
 # from passlib.context import CryptContext
 # from dotenv import load_dotenv
 # import os
+# from app.model.posts import Post
 
 
 # load_dotenv()
@@ -45,13 +47,9 @@
 # app = init_app()
 
 
-# class Data(BaseModel):
-#     name: str
-
-
-# @app.post("/create/")
-# async def create(data: Data):
-#     return {"data": data}
+# @app.get("/")
+# async def root():
+#     return {"message": "Welcomt to FastAPI"}
 
 
 # @app.get("/test/{item_id}/")
@@ -59,6 +57,22 @@
 #     return {"Hello ": item_id}
 
 
-# # def start():
-# #     """Launched with 'poetry run start' at root level """
-# #     uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)
+# @app.post("/selectfilter")
+# async def selectfilter(payLoad: dict = Body(...)):
+#     print(payLoad)
+#     return {"message": f"title {payLoad['title']} content: {payLoad['content']}"}
+
+
+# @app.post("/selectfilter")
+# async def selectfilter(payLoad: Post):
+#     print(payLoad.model_dump)
+#     print(f"Title: {payLoad.title}")
+#     print(f"Description: {payLoad.content}")
+#     print(f"Published: {payLoad.published}")
+#     print(f"Ratings: {payLoad.rating}")
+#     return {"message": payLoad}
+
+
+# def start():
+#     """Launched with 'poetry run start' at root level """
+#     uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)

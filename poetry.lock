@@ -454,6 +454,40 @@ files = [
 ]
 
 [[package]]
+name = "repoze-lru"
+version = "0.7"
+description = "A tiny LRU cache implementation and decorator"
+optional = false
+python-versions = "*"
+files = [
+    {file = "repoze.lru-0.7-py3-none-any.whl", hash = "sha256:f77bf0e1096ea445beadd35f3479c5cff2aa1efe604a133e67150bc8630a62ea"},
+    {file = "repoze.lru-0.7.tar.gz", hash = "sha256:0429a75e19380e4ed50c0694e26ac8819b4ea7851ee1fc7583c8572db80aff77"},
+]
+
+[package.extras]
+docs = ["Sphinx"]
+testing = ["coverage", "nose"]
+
+[[package]]
+name = "routes"
+version = "2.5.1"
+description = "Routing Recognition and Generation Tools"
+optional = false
+python-versions = "*"
+files = [
+    {file = "Routes-2.5.1-py2.py3-none-any.whl", hash = "sha256:fab5a042a3a87778eb271d053ca2723cadf43c95b471532a191a48539cb606ea"},
+    {file = "Routes-2.5.1.tar.gz", hash = "sha256:b6346459a15f0cbab01a45a90c3d25caf980d4733d628b4cc1952b865125d053"},
+]
+
+[package.dependencies]
+"repoze.lru" = ">=0.3"
+six = "*"
+
+[package.extras]
+docs = ["Sphinx", "webob"]
+middleware = ["webob"]
+
+[[package]]
 name = "rsa"
 version = "4.9"
 description = "Pure-Python RSA implementation"
@@ -647,4 +681,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "a1d5ead7e0fa5b0dd2462e7e210e3f4f931698571e6d69980337e2bc484c273b"
+content-hash = "2c34a707758ef356e98a0c132b2b5edfed67d57dc5addf72301d5c77de112a16"
