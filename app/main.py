@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from app.config.dbconfig import db
+from fastapi.params import Body
 from pydantic import BaseModel
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -45,18 +46,20 @@ def init_app():
 app = init_app()
 
 
-class Data(BaseModel):
-    name: str
-
-
-@app.post("/create/")
-async def create(data: Data):
-    return {"data": data}
+@app.get("/")
+async def root():
+    return {"message": "Welcomt to FastAPI"}
 
 
 @app.get("/test/{item_id}/")
 async def test(item_id: str):
     return {"Hello ": item_id}
+
+
+@app.post("/selectfilter")
+async def selectfilter(payLoad: dict = Body(...)):
+    print(payLoad)
+    return {"message": f"title {payLoad['title']} content: {payLoad['content']}"}
 
 
 def start():
