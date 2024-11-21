@@ -73,6 +73,21 @@
 #     return {"message": payLoad}
 
 
+# @app.get("/posts/latest")
+# async def get_latest_post():
+#     post = my_posts[len(my_posts) - 1]
+#     return {"message": post}
+
+
+# @app.get("/posts/{id}")
+# async def get_post(id: int, response: Response):
+#     post = find_post(id)
+#     if not post:
+#         response.status_code = status.HTTP_404_NOT_FOUND
+#         return {"message": f"post with id: {id} was not found"}
+#     return {"post_details": post}
+
+
 # def start():
 #     """Launched with 'poetry run start' at root level """
 #     uvicorn.run("app.main:app", host="localhost", port=8888, reload=True)
