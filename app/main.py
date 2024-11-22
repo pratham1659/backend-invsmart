@@ -5,7 +5,6 @@ from app.config.dbconfig import db
 from dotenv import load_dotenv
 import os
 from app.model.posts import Post
-from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -33,7 +32,7 @@ while True:
 
 
 def init_app():
-    db.init()
+    # db.init()
 
     app = FastAPI(
         title="Inventory Insight App",
@@ -41,13 +40,13 @@ def init_app():
         version="1.0"
     )
 
-    @app.on_event("startup")
-    async def startup():
-        await db.create_all()
+    # @app.on_event("startup")
+    # async def startup():
+    #     await db.create_all()
 
-    @app.on_event("shutdown")
-    async def shutdown():
-        await db.close()
+    # @app.on_event("shutdown")
+    # async def shutdown():
+    #     await db.close()
 
     return app
 
@@ -71,24 +70,19 @@ my_posts = [{"id": 1, "title": "title of post 1", "content": "content of post 1"
 
 @app.get("/posts")
 async def get_posts():
-    cursor.execute("""SELECT * FROM posts""")
+    cursor.execute("""SELECT * FROM posts ORDER BY id ASC""")
     posts = cursor.fetchall()
     return {"message": posts}
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 async def create_posts(payLoad: Post):
-    post_dict = payLoad.dict()
-    post_dict['id'] = randrange(0, 1000000)
-    my_posts.append(post_dict)
-    print(payLoad.model_dump_json)
-    return {"data": post_dict}
+    cursor.execute("""INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """,
+                   (payLoad.title, payLoad.content, payLoad.published))
+    new_posts = cursor.fetchone()
 
-
-def find_post(id):
-    for p in my_posts:
-        if p["id"] == id:
-            return p
+    conn.commit()  # This will help you to commit the changes
+    return {"data": new_posts}
 
 
 @app.get("/posts/latest")
@@ -98,8 +92,10 @@ async def get_latest_post():
 
 
 @app.get("/posts/{id}")
-async def get_post(id: int, response: Response):
-    post = find_post(id)
+async def get_post(id: str):
+    cursor.execute("""SELECT * FROM posts WHERE id = %s """,
+                   (str(id),))  # Note the trailing comma
+    post = cursor.fetchone()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} was not found")
@@ -114,28 +110,27 @@ def find_index_post(id):
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_posts(id: int, response: Response):
-    # deleting a post
-    # find the index in the array that has required ID
-    # my_posts.pop(index)
-    index = find_index_post(id)
-    if index is None:
+    cursor.execute(
+        """DELETE FROM posts WHERE id = %s RETURNING *""", (str(id),))
+    deleted_post = cursor.fetchone()
+    conn.commit()  # This will commit the changes
+    if deleted_post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id: {id} does not exist")
-    my_posts.pop(index)
     return Response(status_code=status.HTTP_404_NOT_FOUND)
 
 
 @app.put("/posts/{id}")
 def update_post(id: int, post: Post):
-    print(post)
-    index = find_index_post(id)
-    if index is None:
+    cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING *""",
+                   (post.title, post.content, post.published, str(id),))
+    updated_post = cursor.fetchone()
+    conn.commit()
+
+    if updated_post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id: {id} does not exist")
-    post_dict = post.dict()
-    post_dict['id'] = id
-    my_posts[index] = post_dict
-    return {"data": post_dict}
+    return {"data": updated_post}
 
 
 def start():
