@@ -8,7 +8,7 @@ from app.config.logger import setup_logger
 logger = setup_logger(__name__)
 
 # Retrieve the database URL
-DATABASE_URL = "postgresql+asyncpg://postgres:mysql@localhost:5432/test"
+DATABASE_URL = "postgresql+asyncpg://postgres:mysql@localhost:5432/fastapi"
 if not DATABASE_URL:
     logger.error("DATABASE_URL is not set in the environment variables.")
     raise ValueError("DATABASE_URL is not set in the environment variables.")

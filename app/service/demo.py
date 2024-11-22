@@ -1,17 +1,13 @@
+# import time
 # import uvicorn
-# from fastapi import FastAPI
+# from fastapi import FastAPI, Response, status, HTTPException
 # from app.config.dbconfig import db
-# from fastapi.params import Body
-# from pydantic import BaseModel
-# from fastapi import Depends, FastAPI, HTTPException, status
-# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-# from datetime import datetime, timedelta
-# from jose import JWTError, jwt
-# from passlib.context import CryptContext
 # from dotenv import load_dotenv
 # import os
 # from app.model.posts import Post
-
+# from random import randrange
+# import psycopg2
+# from psycopg2.extras import RealDictCursor
 
 # load_dotenv()
 
@@ -22,6 +18,18 @@
 # ALGORITHM = "HS256"
 
 # ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+# while True:
+#     try:
+#         conn = psycopg2.connect(
+#             host='localhost', database='fastapi', user='postgres', password='mysql', cursor_factory=RealDictCursor)
+#         cursor = conn.cursor()
+#         print("Database Connection was Successfull")
+#         break
+#     except Exception as e:
+#         print("Connecting to Database failed....")
+#         print("Error: ", e)
+#         time.sleep(2)
 
 
 # def init_app():
@@ -57,20 +65,30 @@
 #     return {"Hello ": item_id}
 
 
-# @app.post("/selectfilter")
-# async def selectfilter(payLoad: dict = Body(...)):
-#     print(payLoad)
-#     return {"message": f"title {payLoad['title']} content: {payLoad['content']}"}
+# my_posts = [{"id": 1, "title": "title of post 1", "content": "content of post 1", "published": False, "rating": 4},
+#             {"id": 2, "title": "favorite foods", "content": "I like pizza", "published": True, "rating": 5}]
 
 
-# @app.post("/selectfilter")
-# async def selectfilter(payLoad: Post):
-#     print(payLoad.model_dump)
-#     print(f"Title: {payLoad.title}")
-#     print(f"Description: {payLoad.content}")
-#     print(f"Published: {payLoad.published}")
-#     print(f"Ratings: {payLoad.rating}")
-#     return {"message": payLoad}
+# @app.get("/posts")
+# async def get_posts():
+#     cursor.execute("""SELECT * FROM posts""")
+#     posts = cursor.fetchall()
+#     return {"message": posts}
+
+
+# @app.post("/posts", status_code=status.HTTP_201_CREATED)
+# async def create_posts(payLoad: Post):
+#     post_dict = payLoad.dict()
+#     post_dict['id'] = randrange(0, 1000000)
+#     my_posts.append(post_dict)
+#     print(payLoad.model_dump_json)
+#     return {"data": post_dict}
+
+
+# def find_post(id):
+#     for p in my_posts:
+#         if p["id"] == id:
+#             return p
 
 
 # @app.get("/posts/latest")
@@ -83,9 +101,41 @@
 # async def get_post(id: int, response: Response):
 #     post = find_post(id)
 #     if not post:
-#         response.status_code = status.HTTP_404_NOT_FOUND
-#         return {"message": f"post with id: {id} was not found"}
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                             detail=f"post with id: {id} was not found")
 #     return {"post_details": post}
+
+
+# def find_index_post(id):
+#     for i, p in enumerate(my_posts):
+#         if p["id"] == id:
+#             return i
+
+
+# @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+# async def delete_posts(id: int, response: Response):
+#     # deleting a post
+#     # find the index in the array that has required ID
+#     # my_posts.pop(index)
+#     index = find_index_post(id)
+#     if index is None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                             detail=f"Post with id: {id} does not exist")
+#     my_posts.pop(index)
+#     return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+
+# @app.put("/posts/{id}")
+# def update_post(id: int, post: Post):
+#     print(post)
+#     index = find_index_post(id)
+#     if index is None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                             detail=f"Post with id: {id} does not exist")
+#     post_dict = post.dict()
+#     post_dict['id'] = id
+#     my_posts[index] = post_dict
+#     return {"data": post_dict}
 
 
 # def start():

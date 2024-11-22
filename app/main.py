@@ -1,3 +1,4 @@
+import time
 import uvicorn
 from fastapi import FastAPI, Response, status, HTTPException
 from app.config.dbconfig import db
@@ -5,7 +6,8 @@ from dotenv import load_dotenv
 import os
 from app.model.posts import Post
 from random import randrange
-
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 load_dotenv()
 
@@ -16,6 +18,18 @@ if not SECRET_KEY:
 ALGORITHM = "HS256"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+while True:
+    try:
+        conn = psycopg2.connect(
+            host='localhost', database='fastapi', user='postgres', password='mysql', cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
+        print("Database Connection was Successfull")
+        break
+    except Exception as e:
+        print("Connecting to Database failed....")
+        print("Error: ", e)
+        time.sleep(2)
 
 
 def init_app():
@@ -57,7 +71,9 @@ my_posts = [{"id": 1, "title": "title of post 1", "content": "content of post 1"
 
 @app.get("/posts")
 async def get_posts():
-    return {"message": my_posts}
+    cursor.execute("""SELECT * FROM posts""")
+    posts = cursor.fetchall()
+    return {"message": posts}
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
