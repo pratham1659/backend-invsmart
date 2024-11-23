@@ -1,20 +1,16 @@
 from typing import Optional, List
-from pydantic import BaseModel
 import uvicorn
 from fastapi import FastAPI, Header, status, HTTPException
 from app.data.book_data import books
-from app.repository.schemas import Book
+from app.repository.schemas import Book, BookUpdateModel, BookCreateModel
 
 
 def init_app():
-    # db.init()
-
     app = FastAPI(
         title="Inventory Insight App",
         description="Login Page",
         version="1.0"
     )
-
     return app
 
 
@@ -60,11 +56,6 @@ async def greet_name2(name: Optional[str] = "User", age: int = 0) -> dict:
     return {"message": f"Hello {name} and Age is {age}"}
 
 
-class BookCreateModel(BaseModel):
-    title: str
-    author: str
-
-
 @app.post("/create_book")
 async def create_book(book_data: BookCreateModel):
     return {
@@ -78,17 +69,40 @@ async def get_all_books():
     return books
 
 
-@app.post("/books")
-async def create_a_book() -> dict:
-    pass
+@app.post("/books", status_code=status.HTTP_201_CREATED)
+async def create_a_book(book_data: Book) -> dict:
+    new_book = book_data.model_dump()
+    books.append(new_book)
+    return new_book
 
 
 @app.get("/book/{book_id}")
 async def get_book(book_id: int) -> dict:
-    pass
+    for book in books:
+        if book["id"] == book_id:
+            return book
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Book is not found")
 
 
-@app.get("/book/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.patch("/book/{book_id}")
+async def update_book(book_id: int, book_update_data: BookUpdateModel) -> dict:
+    for book in books:
+        if book['id'] == book_id:
+            book['title'] = book_update_data.title
+            book['author'] = book_update_data.author
+            book['publisher'] = book_update_data.publisher
+            book['page_count'] = book_update_data.page_count
+            book['language'] = book_update_data.language
+            book['rating'] = book_update_data.rating
+
+            return book
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Book is not found")
+
+
+@app.delete("/book/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_book(book_id: int):
     for book in books:
         if book["id"] == book_id:
