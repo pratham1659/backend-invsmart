@@ -1,3 +1,6 @@
 async vs sync
 
 What is JSON ?
+
+
+pip freeze > requirements.txt
