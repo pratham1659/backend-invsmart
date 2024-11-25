@@ -4,3 +4,8 @@ What is JSON ?
 
 
 pip freeze > requirements.txt
+
+>>> app.config.dbconfig import Settings 
+>>> s = Settings()
+>>> s.DATABASE_URL
+'postgresql+asyncpg://postgres:mysql@localhost:5432/bookly_db'

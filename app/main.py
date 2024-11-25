@@ -3,8 +3,21 @@ from fastapi import FastAPI, Header
 from app.repository.routes import book_router
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+from contextlib import asynccontextmanager
+from app.config.dbconfig import init_db
 
 load_dotenv()
+
+
+@asynccontextmanager
+async def life_span(app: FastAPI):
+    print(f"🚀 [STARTUP] FastAPI server is warming up. Time: {
+          datetime.now()} 🚀")
+    await init_db()
+    yield
+    print(f"🛑 [SHUTDOWN] FastAPI server is winding down. Time: {
+          datetime.now()} 🛑")
 
 version = os.getenv("VERSION")
 
@@ -13,7 +26,8 @@ def init_app():
     app = FastAPI(
         title="Inventory Insight App",
         description="Login Page",
-        version=version
+        version=version,
+        lifespan=life_span
     )
     return app
 
