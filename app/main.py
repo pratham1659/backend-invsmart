@@ -1,11 +1,12 @@
 import uvicorn
-from fastapi import FastAPI, Header
-from app.router.routes import book_router
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from fastapi import FastAPI, Header
 from contextlib import asynccontextmanager
 from app.config.dbconfig import init_db
+from app.router.book_routes import book_router
+from app.router.auth_routes import auth_router
 
 load_dotenv()
 
@@ -35,12 +36,12 @@ def init_app():
 app = init_app()
 
 
-@book_router.get("/")
+@app.get("/")
 async def root():
     return {"message": "Welcomt to FastAPI"}
 
 
-@book_router.get("/get_headers", status_code=201)
+@app.get("/get_headers", status_code=201)
 async def get_header(
     accept: str = Header(None),
     content_type: str = Header(None),
@@ -58,6 +59,7 @@ async def get_header(
 
 
 app.include_router(book_router, prefix="/api/{version}/books", tags=['books'])
+app.include_router(auth_router, prefix="/api/{version}/auth", tags=['auth'])
 
 
 def start():

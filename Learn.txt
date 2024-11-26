@@ -9,3 +9,27 @@ pip freeze > requirements.txt
 >>> s = Settings()
 >>> s.DATABASE_URL
 'postgresql+asyncpg://postgres:mysql@localhost:5432/bookly_db'
+
+
+alembic init -t async app/db/migrations
+
+alembic revision --autogenerate -m "Initial migration"
+
+alembic upgrade head
+
+
+
+## Postgress SQL Commands
+-- to select the current DB
+\c bookly_db 
+
+-- to show details of table
+\dt
+
+-- to describe the current table
+\d users
+
+select * from alembic_version
+
+
+alembic revision --autogenerate -m "add password hash"
