@@ -33,3 +33,10 @@ select * from alembic_version
 
 
 alembic revision --autogenerate -m "add password hash"
+
+
+
+# To Extract the JWT Secret Key
+python3
+import secrets
+secrets.token_hex(16)

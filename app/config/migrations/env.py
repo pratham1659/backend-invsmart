@@ -9,7 +9,7 @@ from alembic import context
 from app.model.authmodel import User
 from app.model.bookmodel import Book
 from sqlmodel import SQLModel
-from app.config.dbsettings import Config
+from app.config.settings import Config
 
 
 database_url = Config.DATABASE_URL
