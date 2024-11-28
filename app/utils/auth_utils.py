@@ -1,3 +1,4 @@
+import logging
 import uuid
 import jwt
 from datetime import datetime, timedelta
@@ -5,10 +6,8 @@ from passlib.context import CryptContext
 from app.config.settings import Config
 
 
-passwd_context = CryptContext(schemes=["bcrypt"])
-
-
 ACCESS_TOKEN_EXPIRY = 3600
+passwd_context = CryptContext(schemes=["bcrypt"])
 
 
 def generate_passwd_hash(password: str) -> str:
@@ -42,21 +41,22 @@ def create_access_token(
     return token
 
 
-# def decode_token(token: str) -> dict:
-#     try:
-#         token_data = jwt.decode(
-#             jwt=token, key=Config.JWT_SECRET, algorithms=[Config.JWT_ALGORITHM]
-#         )
+def decode_token(token: str) -> dict:
+    try:
+        token_data = jwt.decode(
+            jwt=token, key=Config.JWT_SECRET_KEY, algorithms=[
+                Config.JWT_ALGORITHM]
+        )
 
-#         return token_data
+        return token_data
 
-#     except jwt.PyJWTError as e:
-#         logging.exception(e)
-#         return None
+    except jwt.PyJWTError as e:
+        logging.exception(e)
+        return None
 
 
 # serializer = URLSafeTimedSerializer(
-#     secret_key=Config.JWT_SECRET, salt="email-configuration"
+#     secret_key=Config.JWT_SECRET_KEY, salt="email-configuration"
 # )
 
 
