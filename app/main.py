@@ -6,6 +6,7 @@ from app.config.dbconfig import init_db
 from app.router.book_routes import book_router
 from app.router.auth_routes import auth_router
 from app.config.settings import Config
+from app.core.redis_connect import connect_to_redis
 
 # Lifecycle Management
 
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
     print(f"🚀 [STARTUP] FastAPI server is warming up. Time: {
           datetime.now()} 🚀")
     await init_db()
+    await connect_to_redis()
     yield
     print(f"🛑 [SHUTDOWN] FastAPI server is winding down. Time: {
           datetime.now()} 🛑")
