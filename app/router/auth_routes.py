@@ -5,7 +5,7 @@ from sqlmodel. ext. asyncio.session import AsyncSession
 from app.schemas.auth_schemas import UserCreateModel, UserLoginModel, UserModel
 from app.service.auth_service import UserService
 from app.config.dbconfig import get_session
-from app.utils.auth_utils import create_access_token, decode_token, verify_password
+from app.utils.auth_utils import create_access_token, verify_password
 
 
 auth_router = APIRouter()
