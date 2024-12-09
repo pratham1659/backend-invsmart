@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.config.tokenconfig import RefreshTokenBearer
+from app.config.redis_config import add_jti_to_blocklist
+from app.config.tokenconfig import RefreshTokenBearer, AccessTokenBearer
 from app.schemas.auth_schemas import UserCreateModel, UserLoginModel, UserModel
 from app.service.auth_service import UserService
 from app.config.dbconfig import get_session
@@ -94,4 +95,15 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
 
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or Expired Token"
+    )
+
+
+@auth_router.get("/logout")
+async def revoke_token(token_details: dict = Depends(AccessTokenBearer())):
+    jti = token_details["jti"]
+
+    await add_jti_to_blocklist(jti)
+
+    return JSONResponse(
+        content={"message": "Logged Out Successfully"}, status_code=status.HTTP_200_OK
     )

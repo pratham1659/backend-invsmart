@@ -3,10 +3,11 @@ from datetime import datetime
 from fastapi import FastAPI, Header
 from contextlib import asynccontextmanager
 from app.config.dbconfig import init_db
+from app.core.redis_connect import connect_to_redis
 from app.router.book_routes import book_router
 from app.router.auth_routes import auth_router
 from app.config.settings import Config
-from app.core.redis_connect import connect_to_redis
+
 
 # Lifecycle Management
 
