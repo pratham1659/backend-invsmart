@@ -4,15 +4,16 @@ from app.schemas.book_schemas import Book, BookCreateModel, BookUpdateModel
 from app.service.book_service import BookService
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.dbconfig import get_session
-from app.config.tokenconfig import AccessTokenBearer
+from app.config.tokenconfig import AccessTokenBearer, RoleChecker
 
 
 book_router = APIRouter()
 book_service = BookService()
 access_token_bearer = AccessTokenBearer()
+role_checker = Depends(RoleChecker(["admin", "user"]))
 
 
-@book_router.get("/", response_model=List[Book])
+@book_router.get("/", response_model=List[Book], dependencies=[role_checker])
 async def get_all_books(
     session: AsyncSession = Depends(get_session),
     user_details=Depends(access_token_bearer),
@@ -33,7 +34,7 @@ async def create_a_book(
     return new_book
 
 
-@book_router.get("/{book_uid}", response_model=Book)
+@book_router.get("/{book_uid}", response_model=Book, dependencies=[role_checker])
 async def get_book(
     book_uid: str,
     session: AsyncSession = Depends(get_session),
@@ -50,7 +51,7 @@ async def get_book(
         )
 
 
-@book_router.patch("/{book_uid}", response_model=Book)
+@book_router.patch("/{book_uid}", response_model=Book, dependencies=[role_checker])
 async def update_book(
     book_uid: str,
     book_update_data: BookUpdateModel,
@@ -68,7 +69,7 @@ async def update_book(
         return updated_book
 
 
-@book_router.delete("/{book_uid}", status_code=status.HTTP_204_NO_CONTENT)
+@book_router.delete("/{book_uid}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[role_checker])
 async def delete_book(
     book_uid: str,
     session: AsyncSession = Depends(get_session),
