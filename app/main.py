@@ -50,9 +50,6 @@ def create_app() -> FastAPI:
     return app
 
 
-# Routes
-
-
 async def root():
     return {"message": "Welcome to FastAPI"}
 
@@ -73,8 +70,6 @@ async def get_headers(
 
 # Initialize Application
 app = create_app()
-
-# Entry Point
 
 
 def start():

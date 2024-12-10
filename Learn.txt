@@ -13,6 +13,7 @@ pip freeze > requirements.txt
 
 alembic init -t async app/db/migrations
 
+make sure to remove the lifespan from main.py
 alembic revision --autogenerate -m "Initial migration"
 
 alembic upgrade head
