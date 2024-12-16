@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 from typing import List
 from app.books.book_schemas import Book, BookCreateModel, BookUpdateModel
-from app.service.book_service import BookService
+from app.books.book_service import BookService
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.db.dbconfig import get_session
 from app.config.tokenconfig import AccessTokenBearer, RoleChecker

@@ -8,7 +8,7 @@ from app.config.redis_config import token_in_blocklist
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.db.model import User
 from app.utils.auth_utils import decode_token
-from app.service.auth_service import UserService
+from app.auth.auth_service import UserService
 
 
 user_service = UserService()
