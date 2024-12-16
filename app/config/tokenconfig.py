@@ -3,10 +3,10 @@ from fastapi import Depends, Request, status
 from fastapi.exceptions import HTTPException
 from fastapi.security import HTTPBearer
 from fastapi.security.http import HTTPAuthorizationCredentials
-from app.config.dbconfig import get_session
+from app.db.dbconfig import get_session
 from app.config.redis_config import token_in_blocklist
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.model.authmodel import User
+from app.db.model import User
 from app.utils.auth_utils import decode_token
 from app.service.auth_service import UserService
 
@@ -30,10 +30,11 @@ class TokenBearer(HTTPBearer):
 
         if not self.token_valid(token):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail={
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
                     "error": "Invalid or expired Token",
                     "resoultion": "Please get a new Token",
-                }
+                },
             )
 
         if await token_in_blocklist(token_data["jti"]):
@@ -55,8 +56,7 @@ class TokenBearer(HTTPBearer):
         return token_data is not None
 
     def verify_token_data(self, token_data):
-        raise NotImplementedError(
-            "Please Override this method in child classes")
+        raise NotImplementedError("Please Override this method in child classes")
 
 
 class AccessTokenBearer(TokenBearer):
@@ -100,5 +100,5 @@ class RoleChecker:
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="You are not permitted to perform this action"
+            detail="You are not permitted to perform this action",
         )

@@ -2,10 +2,10 @@ import uvicorn
 from datetime import datetime
 from fastapi import FastAPI, Header
 from contextlib import asynccontextmanager
-from app.config.dbconfig import init_db
+from app.db.dbconfig import init_db
 from app.core.redis_connect import connect_to_redis
-from app.router.book_routes import book_router
-from app.router.auth_routes import auth_router
+from app.books.book_routes import book_router
+from app.auth.auth_routes import auth_router
 from app.config.settings import Config
 
 
@@ -38,8 +38,7 @@ def create_app() -> FastAPI:
     app.include_router(
         book_router, prefix=f"/api/{Config.VERSION}/books", tags=["books"]
     )
-    app.include_router(
-        auth_router, prefix=f"/api/{Config.VERSION}/auth", tags=["auth"])
+    app.include_router(auth_router, prefix=f"/api/{Config.VERSION}/auth", tags=["auth"])
 
     # Add Routes
     app.add_api_route("/", root, methods=["GET"], tags=["General"])

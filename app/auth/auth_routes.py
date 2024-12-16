@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.redis_config import add_jti_to_blocklist
 from app.service.auth_service import UserService
-from app.config.dbconfig import get_session
+from app.db.dbconfig import get_session
 from app.utils.auth_utils import create_access_token, verify_password
 from app.config.tokenconfig import (
     RefreshTokenBearer,
@@ -12,7 +12,7 @@ from app.config.tokenconfig import (
     get_current_user,
     RoleChecker,
 )
-from app.schemas.auth_schemas import (
+from app.auth.auth_schemas import (
     UserCreateModel,
     UserLoginModel,
     UserModel,
