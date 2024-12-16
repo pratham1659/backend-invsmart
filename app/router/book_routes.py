@@ -35,14 +35,19 @@ async def get_user_book_submissions(
     return books
 
 
-@book_router.post("/", status_code=status.HTTP_201_CREATED, response_model=Book, dependencies=[role_checker])
+@book_router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=Book,
+    dependencies=[role_checker],
+)
 async def create_a_book(
     book_data: BookCreateModel,
     session: AsyncSession = Depends(get_session),
     token_details: dict = Depends(access_token_bearer),
 ) -> dict:
     # print(token_details)
-    user_id = token_details.get('user')['user_uid']
+    user_id = token_details.get("user")["user_uid"]
     new_book = await book_service.create_book(book_data, user_id, session)
     return new_book
 
@@ -82,7 +87,9 @@ async def update_book(
         return updated_book
 
 
-@book_router.delete("/{book_uid}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[role_checker])
+@book_router.delete(
+    "/{book_uid}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[role_checker]
+)
 async def delete_book(
     book_uid: str,
     session: AsyncSession = Depends(get_session),

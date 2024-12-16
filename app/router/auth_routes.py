@@ -3,11 +3,21 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.redis_config import add_jti_to_blocklist
-from app.config.tokenconfig import RefreshTokenBearer, AccessTokenBearer, get_current_user, RoleChecker
-from app.schemas.auth_schemas import UserCreateModel, UserLoginModel, UserModel
 from app.service.auth_service import UserService
 from app.config.dbconfig import get_session
 from app.utils.auth_utils import create_access_token, verify_password
+from app.config.tokenconfig import (
+    RefreshTokenBearer,
+    AccessTokenBearer,
+    get_current_user,
+    RoleChecker,
+)
+from app.schemas.auth_schemas import (
+    UserCreateModel,
+    UserLoginModel,
+    UserModel,
+    UserBooksModel,
+)
 
 
 auth_router = APIRouter()
@@ -99,10 +109,11 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
         status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or Expired Token"
     )
 
+
 # , response_model = UserBooksModel
 
 
-@auth_router.get("/me", response_model=UserModel)
+@auth_router.get("/me", response_model=UserBooksModel)
 async def get_current_user(
     user=Depends(get_current_user), _: bool = Depends(role_checker)
 ):

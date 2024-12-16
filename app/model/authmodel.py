@@ -1,17 +1,15 @@
+import uuid
 from typing import List
-from sqlmodel import Relationship, SQLModel, Field, Column
 import sqlalchemy.dialects.postgresql as pg
 from datetime import datetime
-import uuid
-
 from app.model import bookmodel
+from sqlmodel import Relationship, SQLModel, Field, Column
 
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
     uid: uuid.UUID = Field(
-        sa_column=Column(pg.UUID, nullable=False,
-                         primary_key=True, default=uuid.uuid4)
+        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
     )
     username: str
     email: str
@@ -22,12 +20,11 @@ class User(SQLModel, table=True):
     )
     is_verified: bool = Field(default=False)
     password_hash: str = Field(exclude=True)
-    created_at: datetime = Field(sa_column=Column(
-        pg.TIMESTAMP, default=datetime.now))
-    updated_at: datetime = Field(sa_column=Column(
-        pg.TIMESTAMP, default=datetime.now))
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
     books: List["bookmodel.Book"] = Relationship(
-        back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
+        back_populates="user", sa_relationship_kwargs={"lazy": "selectin"}
+    )
 
     def __repr__(self):
         return f"<User(username={self.username}, email={self.email})>"
