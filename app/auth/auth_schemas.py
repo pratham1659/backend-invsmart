@@ -4,6 +4,8 @@ from typing import List
 from app.books.book_schemas import Book
 from pydantic import BaseModel, Field
 
+from app.reviews.review_schemas import ReviewModel
+
 
 class UserCreateModel(BaseModel):
     first_name: str = Field(max_length=25)
@@ -39,6 +41,7 @@ class UserModel(BaseModel):
 
 class UserBooksModel(UserModel):
     books: List[Book]
+    reviews: List[ReviewModel]
 
 
 class UserLoginModel(BaseModel):
