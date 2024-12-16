@@ -1,8 +1,8 @@
-"""Add roles to users
+"""new db changes
 
-Revision ID: 85c1d754b211
-Revises: 9573aab1e1b7
-Create Date: 2024-12-11 01:27:14.601461
+Revision ID: b42b0283c7bf
+Revises: 
+Create Date: 2024-12-16 00:50:19.050160
 
 """
 from typing import Sequence, Union
@@ -13,8 +13,8 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '85c1d754b211'
-down_revision: Union[str, None] = '9573aab1e1b7'
+revision: str = 'b42b0283c7bf'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

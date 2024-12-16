@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
         title="Inventory Insight App",
         description="Login Page",
         version=Config.VERSION,
-        lifespan=lifespan,
+        # lifespan=lifespan, This is used for creating the tables and db, but now we are using alembic
     )
 
     # Include Routers
