@@ -19,7 +19,7 @@ from app.auth.auth_schemas import (
     UserBooksModel,
 )
 
-from app.core.errors import (
+from app.config.errors import (
     InvalidCredentials, InvalidToken
 )
 

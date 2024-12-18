@@ -1,15 +1,14 @@
 import uvicorn
-from datetime import datetime
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.db.dbconfig import init_db
-from app.core.redis_connect import connect_to_redis
+from app.config.redis_connect import connect_to_redis
 from app.books.book_routes import book_router
 from app.auth.auth_routes import auth_router
 from app.reviews.review_routes import review_router
 from app.tags.tags_routes import tags_router
 from app.config.settings import Config
-from app.core.errors import register_all_errors
+from app.config.errors import register_all_errors
 
 
 @asynccontextmanager

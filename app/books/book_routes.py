@@ -5,7 +5,7 @@ from .book_service import BookService
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.db.dbconfig import get_session
 from app.config.tokenconfig import AccessTokenBearer, RoleChecker
-from app.core.errors import BookNotFound
+from app.config.errors import BookNotFound
 
 
 book_router = APIRouter()

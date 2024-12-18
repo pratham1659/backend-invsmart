@@ -8,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.db.models import User
 from app.utils.auth_utils import decode_token
 from app.auth.auth_service import UserService
-from app.core.errors import (
+from app.config.errors import (
     InvalidToken,
     RefreshTokenRequired,
     AccessTokenRequired,

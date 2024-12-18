@@ -7,7 +7,7 @@ from app.books.book_service import BookService
 from app.db.models import Tag
 
 from .tags_schemas import TagAddModel, TagCreateModel
-from app.core.errors import BookNotFound, TagNotFound, TagAlreadyExists
+from app.config.errors import BookNotFound, TagNotFound, TagAlreadyExists
 
 book_service = BookService()
 
