@@ -19,6 +19,10 @@ from app.auth.auth_schemas import (
     UserBooksModel,
 )
 
+from app.core.errors import (
+    InvalidCredentials, InvalidToken
+)
+
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -50,7 +54,10 @@ async def create_user_Account(
 
     new_user = await user_service.create_user(user_data, session)
 
-    return new_user
+    return {
+        "message": "Account Created! Check email to verify your account",
+        "user": new_user,
+    }
 
 
 @auth_router.post("/login")
@@ -89,9 +96,7 @@ async def login_users(
                 }
             )
 
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Email and Password"
-    )
+    raise InvalidCredentials()
 
 
 @auth_router.get("/refresh_token")
@@ -105,9 +110,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
 
         return JSONResponse(content={"access_token": new_access_token})
 
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or Expired Token"
-    )
+    raise InvalidToken()
 
 
 @auth_router.get("/me", response_model=UserBooksModel)
