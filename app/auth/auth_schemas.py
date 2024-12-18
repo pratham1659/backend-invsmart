@@ -1,9 +1,8 @@
 import uuid
 from datetime import datetime
 from typing import List
-from app.books.book_schemas import Book
 from pydantic import BaseModel, Field
-
+from app.books.book_schemas import Book
 from app.reviews.review_schemas import ReviewModel
 
 

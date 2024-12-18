@@ -1,5 +1,5 @@
 from sqlmodel import select
-from app.db.model import User
+from app.db.models import User
 from app.auth.auth_schemas import UserCreateModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.utils.auth_utils import generate_passwd_hash
@@ -25,7 +25,8 @@ class UserService:
 
         new_user = User(**user_data_dict)
 
-        new_user.password_hash = generate_passwd_hash(user_data_dict["password"])
+        new_user.password_hash = generate_passwd_hash(
+            user_data_dict["password"])
         new_user.role = "user"
 
         session.add(new_user)

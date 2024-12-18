@@ -1,7 +1,7 @@
 from fastapi.exceptions import HTTPException
 from fastapi import status
 import logging
-from app.db.model import Review
+from app.db.models import Review
 from app.auth.auth_service import UserService
 from app.books.book_service import BookService
 from sqlmodel.ext.asyncio.session import AsyncSession

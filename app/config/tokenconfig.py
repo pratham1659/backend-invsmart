@@ -6,7 +6,7 @@ from fastapi.security.http import HTTPAuthorizationCredentials
 from app.db.dbconfig import get_session
 from app.config.redis_config import token_in_blocklist
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.db.model import User
+from app.db.models import User
 from app.utils.auth_utils import decode_token
 from app.auth.auth_service import UserService
 
@@ -56,7 +56,8 @@ class TokenBearer(HTTPBearer):
         return token_data is not None
 
     def verify_token_data(self, token_data):
-        raise NotImplementedError("Please Override this method in child classes")
+        raise NotImplementedError(
+            "Please Override this method in child classes")
 
 
 class AccessTokenBearer(TokenBearer):
