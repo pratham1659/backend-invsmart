@@ -9,6 +9,7 @@ from app.reviews.review_routes import review_router
 from app.tags.tags_routes import tags_router
 from app.config.settings import Config
 from app.config.errors import register_all_errors
+from app.config.middleware import register_middleware
 
 
 @asynccontextmanager
@@ -50,6 +51,7 @@ app = FastAPI(
 
 
 register_all_errors(app)
+register_middleware(app)
 
 # Include Routers
 app.include_router(
