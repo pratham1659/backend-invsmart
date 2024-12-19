@@ -1,7 +1,5 @@
 import logging
 
-# Configure the logger
-
 
 def setup_logger(name: str):
     logger = logging.getLogger(name)
@@ -18,3 +16,23 @@ def setup_logger(name: str):
         logger.addHandler(console_handler)
 
     return logger
+
+
+class CustomFormatter(logging.Formatter):
+    def format(self, record):
+        return f"{record.levelname}:     {record.message}"
+
+
+def setup_custom_logger():
+    logger = logging.getLogger("uvicorn.access")
+    logger.setLevel(logging.INFO)
+
+    # Prevent duplicate handlers
+    if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
+        handler = logging.StreamHandler()
+        handler.setFormatter(CustomFormatter())
+        logger.addHandler(handler)
+
+    # Ensure logger does not expect args for messages
+    logging.basicConfig(level=logging.INFO,
+                        format="%(levelname)s: %(message)s")

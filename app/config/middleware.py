@@ -1,40 +1,49 @@
-from fastapi import FastAPI
-from fastapi.requests import Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import time
 import logging
 
+# Configure the logger explicitly
 logger = logging.getLogger("uvicorn.access")
-logger.disabled = False
+logger.setLevel(logging.INFO)
+
+# Ensure no handlers are added multiple times
+if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter(
+        "%(asctime)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
 
 
 def register_middleware(app: FastAPI):
-
     @app.middleware("http")
     async def custom_logging(request: Request, call_next):
         start_time = time.time()
-
         response = await call_next(request)
         processing_time = time.time() - start_time
 
-        message = f"{request.client.host}:{request.client.port} - {request.method} - {
-            request.url.path} - {response.status_code} completed after {processing_time}s"
+        # Construct the log message
+        message = (
+            f"{request.client.host} - {request.method} - {request.url.path} - "
+            f"{response.status_code} completed after {processing_time:.2f}s"
+        )
 
-        logger.info(message)
+        print(message)
+
         return response
 
+    # Add CORS middleware
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=["*"],  # Be cautious with "*" in production
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,
     )
 
-    # That will guard against HTTP Host Header attacks.
+    # Add TrustedHostMiddleware to guard against HTTP Host Header attacks
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["localhost", "127.0.0.1",
-                       "localhost:8888"],  # Be strict in production
+        allowed_hosts=["*"]  # Be strict in production, avoid using "*"
     )

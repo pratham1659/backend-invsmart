@@ -31,6 +31,8 @@ def create_access_token(
         expiry if expiry is not None else timedelta(
             seconds=ACCESS_TOKEN_EXPIRY)
     )
+    payload["iat"] = datetime.now()
+    payload["nbf"] = datetime.now()
     payload["jti"] = str(uuid.uuid4())
 
     payload["refresh"] = refresh

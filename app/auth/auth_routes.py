@@ -17,7 +17,6 @@ from app.config.tokenconfig import (
 from app.auth.auth_schemas import (
     UserCreateModel,
     UserLoginModel,
-    UserModel,
     UserBooksModel,
     EmailModel,
 )
@@ -35,7 +34,7 @@ REFRESH_TOKEN_EXPIRY = 2
 
 
 @auth_router.post(
-    "/signup", response_model=UserModel, status_code=status.HTTP_201_CREATED
+    "/signup", status_code=status.HTTP_201_CREATED
 )
 async def create_user_Account(
     user_data: UserCreateModel,
@@ -62,6 +61,14 @@ async def create_user_Account(
     <h1>Verify your Email</h1>
     <p>Please click this <a href="{link}">link</a> to verify your email</p>
     """
+
+    message = create_message(
+        recipients=[email],
+        subject="Verify Your Emails",
+        body=html_message
+    )
+
+    await mail.send_message(message)
 
     return {
         "message": "Account Created! Check email to verify your account",

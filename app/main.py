@@ -10,15 +10,17 @@ from app.tags.tags_routes import tags_router
 from app.config.settings import Config
 from app.config.errors import register_all_errors
 from app.config.middleware import register_middleware
+from app.config.logger import setup_custom_logger
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 [STARTUP] FastAPI server is warming up. Time: 🚀")
+    print("🚀 [STARTUP] FastAPI server is warming up. 🚀")
+    setup_custom_logger()
     await init_db()
     await connect_to_redis()
     yield
-    print("🛑 [SHUTDOWN] FastAPI server is winding down. Time: 🛑")
+    print("🛑 [SHUTDOWN] FastAPI server is winding down.🛑")
 
 
 description = """
