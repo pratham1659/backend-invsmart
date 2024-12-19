@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.redis_config import add_jti_to_blocklist
 from app.auth.auth_service import UserService
 from app.db.dbconfig import get_session
-from app.utils.auth_utils import create_access_token, verify_password
+from app.auth.auth_utils import create_access_token, create_url_safe_token, verify_password
+from app.config.settings import Config
+from app.mail.mail_config import mail, create_message
 from app.config.tokenconfig import (
     RefreshTokenBearer,
     AccessTokenBearer,
@@ -17,10 +19,11 @@ from app.auth.auth_schemas import (
     UserLoginModel,
     UserModel,
     UserBooksModel,
+    EmailModel,
 )
 
 from app.config.errors import (
-    InvalidCredentials, InvalidToken
+    InvalidCredentials, InvalidToken, UserAlreadyExists
 )
 
 
@@ -47,12 +50,18 @@ async def create_user_Account(
     user_exists = await user_service.user_exists(email, session)
 
     if user_exists:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User with email already exists",
-        )
+        raise UserAlreadyExists()
 
     new_user = await user_service.create_user(user_data, session)
+
+    token = create_url_safe_token({"email": email})
+
+    link = f"http://{Config.DOMAIN}/api/v1/auth/verify/{token}"
+
+    html_message = f"""
+    <h1>Verify your Email</h1>
+    <p>Please click this <a href="{link}">link</a> to verify your email</p>
+    """
 
     return {
         "message": "Account Created! Check email to verify your account",
@@ -129,3 +138,20 @@ async def revoke_token(token_details: dict = Depends(AccessTokenBearer())):
     return JSONResponse(
         content={"message": "Logged Out Successfully"}, status_code=status.HTTP_200_OK
     )
+
+
+@auth_router.post("/send_mail")
+async def send_mail(emails: EmailModel):
+    emails = emails.addresses
+
+    html = "<h1>Welcome to the app</h1>"
+
+    message = create_message(
+        recipients=emails,
+        subject="Bookly mail",
+        body=html
+    )
+
+    await mail.send_message(message)
+
+    return {"message": "Email sent successfully"}

@@ -1,6 +1,5 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import time
@@ -22,21 +21,7 @@ def register_middleware(app: FastAPI):
         message = f"{request.client.host}:{request.client.port} - {request.method} - {
             request.url.path} - {response.status_code} completed after {processing_time}s"
 
-        print(message)
-        return response
-
-    @app.middleware('http')
-    async def authorization(request: Request, call_next):
-        if "Authorization" not in request.headers:
-            return JSONResponse(
-                content={
-                    "message": "Not Authenticated",
-                    "resolution": "Please provide the right credentials to proceed"
-                },
-                status_code=status.HTTP_401_UNAUTHORIZED
-            )
-        response = await call_next(request)
-
+        logger.info(message)
         return response
 
     app.add_middleware(
@@ -51,5 +36,5 @@ def register_middleware(app: FastAPI):
     app.add_middleware(
         TrustedHostMiddleware,
         allowed_hosts=["localhost", "127.0.0.1",
-                       "bookly-api-dc03.onrender.com", "0.0.0.0"],
+                       "localhost:8888"],  # Be strict in production
     )

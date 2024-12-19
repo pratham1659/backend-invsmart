@@ -35,7 +35,7 @@ app = FastAPI(
     title="Bookly",
     description=description,
     version=Config.VERSION,
-    # lifespan=lifespan,
+    lifespan=lifespan,
     license_info={"name": "MIT License",
                   "url": "https://opensource.org/license/mit"},
     contact={

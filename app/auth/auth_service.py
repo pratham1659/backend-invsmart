@@ -2,7 +2,7 @@ from sqlmodel import select
 from app.db.models import User
 from app.auth.auth_schemas import UserCreateModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.utils.auth_utils import generate_passwd_hash
+from app.auth.auth_utils import generate_passwd_hash
 
 
 class UserService:
